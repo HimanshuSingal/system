@@ -46,7 +46,20 @@ for i in range(1,x):
 for i in range(x-2,-1,-1):
     original[i]=original[i+1]+original[i]
 
-
+HG = open("hist_G.txt",'w') ;
+HI = open("hist_I.txt",'w') ; 
+for i in range(1,x):
+	HI.write('%d' % i)
+	HI.write(' ')
+	print imposter[i]
+	HI.write('%f' % float(float(imposter[i])/float(imposter[x-1])))
+	HI.write('\n')
+	HG.write('%d' % i)
+	HG.write(' ')
+	HG.write('%f' % float(float(original[i])/float(original[0])))
+	HG.write('\n')
+HG.close()
+HI.close()
 minvalue  = 1000000000000
 threshold = 0 
 for i in range(0,x):
