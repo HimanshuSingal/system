@@ -12,7 +12,7 @@ with open("L4_1000.txt",'r') as stream:
 	if len(data) == 6 :
        	 	score = float(data[5].split("\n")[0])*x
 	else :
-		continue 
+		break  
         intscore=int(score)  
 	# Imposter  i index corresponds to  all values in between [ y*(i-1) , y*(i) ) 
 	# Genuine i index corresponds to all values in between ( y*(i-1) , y*(i) ] 
@@ -83,6 +83,26 @@ if threshold == 0 :
 	else:
 			threshold = (abs(xI+mG)/2)*(pow(10,-6))
 			index = (abs(xI+mG)/2)
+
+	frr = open("FRR.txt",'w') ; 
+	far = open("FAR.txt",'w') ; 
+	with open("L4_1000.txt",'r') as stream :
+		for row1 in stream : 
+			data1 = row1.split("\t") 
+			if len(data1) != 6 :
+				break 
+			score = float(data1[5].split("\n")[0])
+			if int(data1[4]) == 1:
+					if score > threshold :
+						far.write(row1)
+						print score
+			else :
+					if score <= threshold :
+						frr.write(row1)	
+	frr.close() 
+	far.close()
+	
+
 
 print threshold
 print imposter[index] 
