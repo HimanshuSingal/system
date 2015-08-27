@@ -7,11 +7,62 @@ imposter=[0]*x
 impostercunt = 0 
 originalcunt = 0 
 filename="../L4.txt"
+
+crr_out = open("../files/CRR.txt",'w')
+flag  = 1
+curs1 = 1 
+curid = 1
+mxs  =1
+mxid =1
+mxgi = 1
+mxd = 1
+mns = 1
+mnid = 1
+mnd = 1 
+
 with open(filename,'r') as stream:
     
     for row in stream:
-        data=row.split("\t")
-	score = 0 
+	data = row.split('\t')
+	if len(data) != 6:
+			break
+	if flag == 1 : 
+			curs = int(data[0])
+			curid = int(data[1])
+			mxs = int(data[2])
+			mxid = int(data[3])
+			mxgi = int(data[4])
+			mns = mxs
+			mxd = float(data[5].split("\n")[0])
+			mnd = float(data[5].split("\n")[0])
+			mnid =mxid
+			flag = 0
+	else :
+			if curs != int(data[0]) or curid != int(data[1]):
+                	        
+				out='%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n'%(curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi)	
+				crr_out.write(out)				
+				curs = int(data[0])
+				curid = int(data[1])
+				mxs = int(data[2])
+				mxid = int(data[3])
+				mns = mxs 
+				mnid= mxid
+				mxgi = int(data[4])	
+				mxd = float(data[5].split("\n")[0])
+				mnd = mxd
+			else :
+				score = float(data[5].split("\n")[0])
+				if score < mxd:
+					mxd = score 
+					mxs =  int(data[2])
+					mxid=  int(data[3])
+					mxgi = int(data[4])
+				if score > mnd:
+					mnd = score 
+					mns =  int(data[2])
+					mnid=  int(data[3])
+        score = 0 
 	if len(data) == 6 :
        	 	score = float(data[5].split("\n")[0])*x
 	else :
@@ -41,6 +92,11 @@ with open(filename,'r') as stream:
         # Imposter  i index corresponds to  all values in between [ 0, y*(i) ) 
 	# Genuine i index corresponds to all values in between ( y*(i-1) , 1 ] 
 	# y ==> pow( 10 , -6 )           
+out='%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n'%(curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi)
+
+crr_out.write(out)
+crr_out.close()
+
 HG = open("../files/hist_G.txt",'w') 
 HI = open("../files/hist_I.txt",'w')
 for i in range(1,x):
@@ -99,9 +155,9 @@ if threshold == 0 :
 			threshold = (abs(xI+mG)/2)*(pow(10,-6))
 			index = (abs(xI+mG)/2)
 
-	frr = open("../files/FRR.txt",'w')  
-	far = open("../files/FAR.txt",'w') 
-	with open(filename,'r') as stream :
+frr = open("../files/FRR.txt",'w')  
+far = open("../files/FAR.txt",'w') 
+with open(filename,'r') as stream :
 		for row1 in stream : 
 			data1 = row1.split("\t") 
 			if len(data1) != 6 :
@@ -114,8 +170,8 @@ if threshold == 0 :
 			else :
 					if score <= threshold :
 						frr.write(row1)	
-	frr.close() 
-	far.close()
+frr.close() 
+far.close()
 	
 
 
@@ -126,59 +182,6 @@ print imp
 print orig
 print abs(imp-orig) 
 
-crr_out = open("../files/CRR.txt",'w')
-flag  = 1
-curs1 = 1 
-curid = 1
-mxs  =1
-mxid =1
-mxgi = 1
-mxd = 1
-mns = 1
-mnid = 1
-mnd = 1 
-with open(filename,'r') as stream :
-	for row in stream :
-		data = row.split('\t')
-		if len(data) != 6:
-			break
-		if flag == 1 : 
-			curs = int(data[0])
-			curid = int(data[1])
-			mxs = int(data[2])
-			mxid = int(data[3])
-			mxgi = int(data[4])
-			mns = mxs
-			mxd = float(data[5].split("\n")[0])
-			mnd = float(data[5].split("\n")[0])
-			mnid =mxid
-			flag = 0
-		else :
-			if curs != int(data[0]) :
-				crr_out.write(str(curs)+" "+str(curid)+"\t"+"[("+str(mxs)+","+str(mxid)+")"+str(mxd)+"]"+"\t"+"[("+str(mns)+","+str(mnid)+")"+str(mnd)+"]"+"\t"+str(float(mxd/mnd)) + "\t"+str(mxgi)+"\n")
-				curs = int(data[0])
-				curid = int(data[1])
-				mxs = int(data[2])
-				mxid = int(data[3])
-				mns = mxs 
-				mnid= mxid
-				mxgi = int(data[4])	
-				mxd = float(data[5].split("\n")[0])
-				mnd = mxd
-			else :
-				score = float(data[5].split("\n")[0])
-				if score < mxd:
-					mxd = score 
-					mxs =  int(data[2])
-					mxid=  int(data[3])
-					mxgi = int(data[4])
-				if score > mnd:
-					mnd = score 
-					mns =  int(data[2])
-					mnid=  int(data[3])
-crr_out.write(str(curs)+" "+str(curid)+"\t"+"[("+str(mxs)+","+str(mxid)+")"+str(mxd)+"]"+"\t"+"[("+str(mns)+","+str(mnid)+")"+str(mnd)+"]"+"\t"+str(float(mxd/mnd)) + "\t"+str(mxgi)+"\n")
-crr_out.close()
-
 
 fout = open('../files/far_vs_frr.txt','w')
 
@@ -186,3 +189,46 @@ fout = open('../files/far_vs_frr.txt','w')
 for i in range(0,x):
 	fout.write(str(float(imposter[i])/imposter[x-1])+" "+str(float(original[i])/original[0])+'\n')
 
+
+sts_file = """
+**************************************************************************************************************************************
+Genuine
+===========================
+177 data points
+672.367 average
+183.165 standard deviation
+13.7675 standard error
+**************************************************************************************************************************************
+Imposter
+===========================
+165 data points
+915.139 average
+49.3979 standard deviation
+3.84563 standard error
+**************************************************************************************************************************************
+Performance Parameters
+===========================
+Decidability Index        (DI) = 	~-1.80977784183226687455
+Correct Recognition Rate (CRR) =   	100
+Equal Error Rate         (EER) = 	 (2.695286)  0.890800 with Difference = 0.057239
+**************************************************************************************************************************************
+Failed Subject in Identification (CRR Failure)
+===========================
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Total Failed Subject =   0 (out of 100)
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+**************************************************************************************************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Total No. of Falsely Reject Matching =   9 out of total 300 genuine matching
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+**************************************************************************************************************************************
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Total No. of Falsely Accept Matching =   808 out of total 29700 imposter matching
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+**************************************************************************************************************************************
+Actual Performance Parameters
+===========================
+False Acceptance Rate        (FAR) = 		~2.72053872053872053872
+False Rejection  Rate        (FAR) = 		3
+**************************************************************************************************************************************
+"""
