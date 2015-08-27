@@ -17,13 +17,13 @@ set key right top
 
 ##########################
 #set xrange [9100:9500]
-#set yrange [0:0.8]
+#set yrange [0:0.05]
 #########################
 
-set logscale x
+
 #set xrange [0.2:3]
-set yrange [0:2.5]
-set xtics (0.0001,0.001,0.01,0.1,1,10,100)
+set yrange [0:0.05]
+#set xtics (0.0001,0.001,0.01,0.1,1,10,100)
 #set xtics (0.2,0.25,0.5,0.75,1)
 
 #set xlabel "Threshold"
@@ -34,7 +34,7 @@ set ylabel "FAR (%)"
 
 ##############################################################
 
-plot "far_vs_frr.txt" using 1:2 title 'FAR VS FRR' w linespoints
+plot "far_vs_frr.txt" using 1:2 title 'FAR VS FRR' w lines
 
 
 ##############################################################

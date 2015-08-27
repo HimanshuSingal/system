@@ -6,7 +6,8 @@ imposter=[0]*x
 
 impostercunt = 0 
 originalcunt = 0 
-with open("L4_1000.txt",'r') as stream:
+filename="../L4.txt"
+with open(filename,'r') as stream:
     
     for row in stream:
         data=row.split("\t")
@@ -40,8 +41,8 @@ with open("L4_1000.txt",'r') as stream:
         # Imposter  i index corresponds to  all values in between [ 0, y*(i) ) 
 	# Genuine i index corresponds to all values in between ( y*(i-1) , 1 ] 
 	# y ==> pow( 10 , -6 )           
-HG = open("hist_G.txt",'w') 
-HI = open("hist_I.txt",'w')
+HG = open("../files/hist_G.txt",'w') 
+HI = open("../files/hist_I.txt",'w')
 for i in range(1,x):
 	HI.write('%d' % i)
 	HI.write(' ')
@@ -98,9 +99,9 @@ if threshold == 0 :
 			threshold = (abs(xI+mG)/2)*(pow(10,-6))
 			index = (abs(xI+mG)/2)
 
-	frr = open("FRR.txt",'w')  
-	far = open("FAR.txt",'w') 
-	with open("L4_1000.txt",'r') as stream :
+	frr = open("../files/FRR.txt",'w')  
+	far = open("../files/FAR.txt",'w') 
+	with open(filename,'r') as stream :
 		for row1 in stream : 
 			data1 = row1.split("\t") 
 			if len(data1) != 6 :
@@ -109,7 +110,7 @@ if threshold == 0 :
 			if int(data1[4]) == 1:
 					if score > threshold :
 						far.write(row1)
-						print score
+						
 			else :
 					if score <= threshold :
 						frr.write(row1)	
@@ -119,11 +120,13 @@ if threshold == 0 :
 
 
 print threshold
-print imposter[index] 
-print original[index]
-print abs(imposter[index]-original[index]) 
+imp = float(imposter[index])/imposter[x-1] 
+orig= float(original[index])/imposter[x-1]
+print imp
+print orig
+print abs(imp-orig) 
 
-crr_out = open("CRR.txt",'w')
+crr_out = open("../files/CRR.txt",'w')
 flag  = 1
 curs1 = 1 
 curid = 1
@@ -134,7 +137,7 @@ mxd = 1
 mns = 1
 mnid = 1
 mnd = 1 
-with open("L4_1000.txt",'r') as stream :
+with open(filename,'r') as stream :
 	for row in stream :
 		data = row.split('\t')
 		if len(data) != 6:
@@ -158,7 +161,7 @@ with open("L4_1000.txt",'r') as stream :
 				mxs = int(data[2])
 				mxid = int(data[3])
 				mns = mxs 
-				mnid= xid
+				mnid= mxid
 				mxgi = int(data[4])	
 				mxd = float(data[5].split("\n")[0])
 				mnd = mxd
@@ -177,7 +180,7 @@ crr_out.write(str(curs)+" "+str(curid)+"\t"+"[("+str(mxs)+","+str(mxid)+")"+str(
 crr_out.close()
 
 
-fout = open('far_vs_frr.txt','w')
+fout = open('../files/far_vs_frr.txt','w')
 
   
 for i in range(0,x):

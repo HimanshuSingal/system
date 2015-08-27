@@ -23,7 +23,7 @@ set xlabel "Score (%)"
 
 
 #set xrange [0.2:3]
-set yrange [0:2.5]
+set yrange [0:0.001]
 
 #set xtics (0.2,0.25,0.5,0.75,1)
 
