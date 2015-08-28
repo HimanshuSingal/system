@@ -1,5 +1,3 @@
-import sys
-from sys import getsizeof
 x=1000000
 original=[0]*x
 imposter=[0]*x
@@ -7,86 +5,53 @@ imposter=[0]*x
 impostercunt = 0 
 originalcunt = 0 
 filename="../L4.txt"
-
+flag = 1 
 crr_out = open("../files/CRR.txt",'w')
-flag  = 1
-curs1 = 1 
-curid = 1
-mxs  =1
-mxid =1
-mxgi = 1
-mxd = 1
-mns = 1
-mnid = 1
-mnd = 1 
 
 with open(filename,'r') as stream:
     
     for row in stream:
 	data = row.split('\t')
-	if len(data) != 6:
-			break
 	if flag == 1 : 
-			curs = int(data[0])
-			curid = int(data[1])
-			mxs = int(data[2])
-			mxid = int(data[3])
-			mxgi = int(data[4])
-			mns = mxs
-			mxd = float(data[5].split("\n")[0])
-			mnd = float(data[5].split("\n")[0])
-			mnid =mxid
+			curs = data[0]
+			curid = data[1]
+			data1 = data
+			data2 = data
 			flag = 0
-	else :
-			if curs != int(data[0]) or curid != int(data[1]):
+	else:
+			if curs != data[0] or curid != data[1]:
                 	        
-				out='%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n'%(curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi)	
-				crr.write(out)				
-				curs = int(data[0])
-				curid = int(data[1])
-				mxs = int(data[2])
-				mxid = int(data[3])
-				mns = mxs 
-				mnid= mxid
-				mxgi = int(data[4])	
-				mxd = float(data[5].split("\n")[0])
-				mnd = mxd
+				#out='%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n'%(data,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi)	
+		#		crr_out.write(out)
+				curs = data[0]
+				curid = data[1]
+				data1 = data 
+				data2 = data
 			else :
-				score = float(data[5].split("\n")[0])
-				if score < mxd:
-					mxd = score 
-					mxs =  int(data[2])
-					mxid=  int(data[3])
-					mxgi = int(data[4])
-				if score > mnd:
-					mnd = score 
-					mns =  int(data[2])
-					mnid=  int(data[3])
-        score = 0 
-	if len(data) == 6 :
-       	 	score = float(data[5].split("\n")[0])*x
-	else :
-		break  
-        intscore=int(score)  
+				score = float(data[5])
+				cmpsc = float(data1[5])
+				if score < cmpsc:
+					data1 = data
+				cmpsc = float(data2[5])				
+				if score > cmpsc:
+					data2 = data
+        score = int(float(data[5])*x)
 	# Imposter  i index corresponds to  all values in between [ y*(i-1) , y*(i) ) 
 	# Genuine i index corresponds to all values in between ( y*(i-1) , y*(i) ] 
 	# y ==> pow( 10 , -6 )    
-        if int(data[4])==1 :
+	if int(data[4])==1 :
             originalcunt+=1
-            if score==intscore:
-                if score!= 0:
-                    original[intscore-1]+=1
-                else:
-                    original[intscore]+=1
+	    if score!= 0:
+                    original[score-1]+=1
             else:
-                original[intscore]+=1
+                    original[score]+=1
                  
         else:
 	    impostercunt+=1
-            if intscore==x:
-                imposter[intscore-1]+=1
+            if score==x:
+                imposter[score-1]+=1
             else :
-                imposter[intscore]+=1
+                imposter[score]+=1
 
 	# Updated 
         # Imposter  i index corresponds to  all values in between [ 0, y*(i) ) 
@@ -99,6 +64,7 @@ crr_out.close()
 
 HG = open("../files/hist_G.txt",'w') 
 HI = open("../files/hist_I.txt",'w')
+print "Hii"
 for i in range(1,x):
 	HI.write('%d' % i)
 	HI.write(' ')
