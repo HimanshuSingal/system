@@ -3,8 +3,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
-
+#include <string>
 #define x 1000000
+#include <algorithm>
 using namespace std;
 int main()
 {
@@ -14,16 +15,20 @@ int main()
   ifstream infile;
   ofstream outfile;
   int idp = 0 ;
+  int impostercunt=0 ;
+  int originalcunt=0 ;
   int gdp = 0 ;
+  int frrcunt = 0;
+  int farcunt = 0 ;
   int tot = 0 ;
   int crr = 0  ;
-  int impostercunt=0;
-  int originalcunt=0;
+  int failsub = 0 ; 
   infile.open("../L4.txt");
   outfile.open("../files/CRR.dat");
   int curs;
   int flag  = 1;
   int curs1 = 1 ;
+
   int curid = 1;
   int mxs  =1;
   int mxid =1;
@@ -207,12 +212,11 @@ infile.open("../L4.txt");
 ofstream farfile;
  ofstream frrfile;cout << threshold << endl;
 farfile.open("../files/FRR.dat");
+ frrfile.open("../files/FAR.dat");
  farfile << "Genuine Failed (FRR)\n";
-
   frrfile << "Imposter Failed (FAR)\n";
- 
-frrfile.open("../files/FAR.dat");
- cout << (float(crr)/tot)*100 << endl;
+ failsub = crr;
+ crr =  (float(crr)/tot)*100 ;
  cout <<"doing farfarr\n";
 while(!infile.eof()){ 
   infile >> data[0] >> data[1] >> data[2] >> data[3] >> data[4] >> data[5] ;  
@@ -220,7 +224,7 @@ while(!infile.eof()){
   if (int(data[4]) == 1){
     if (score > threshold)
       farfile << data[0]<<"\t" << data[1]<<"\t" << data[2]<<"\t" << data[3]<<"\t" << data[4]<<"\t" << data[5]<<"\n";
-  }
+  } 
   else {
     if (score <= threshold)
       frrfile << data[0]<<"\t" << data[1]<<"\t" << data[2]<<"\t" << data[3]<<"\t"<< data[4]<<"\t" << data[5]<<"\n";
@@ -241,22 +245,18 @@ farfile.close();
  // original -- frr
  // imposter -- far
  ofstream fout ;
- ofstream fileout ;
-
 fout.open("../files/far_vs_frr.txt");
-fileout.open("../files/far_vs_frr_data.txt");
-
-//frr original
 for(int i=0;i<x;i++)
-  {
   fout  << float(float(imposter[i])/imposter[x-1]) << " " << float(float(original[i])/original[0])<< endl;
- 
-  fileout<<i<<"\t"<<original[0]-original[i]<<"\t"<<float(float(original[i])/original[0])<<"\t"<<i<<"\t"<<imposter[i]<<"\t"<<float(float(imposter[i])/imposter[x-1])<<endl;
-
-  
-}
- fout.close();
- fileout.close();
-
+ string sts="" ;
+ sts="python create_sts.py ";
+ sts =sts+ to_string(gdp);
+ sts = sts +" " +to_string(0)+" "+to_string(0)+" "+to_string(0)+" ";
+ sts += to_string(idp) +" " +to_string(0)+" "+to_string(0)+" "+to_string(0)+" ";
+ sts += to_string(0)+" "+to_string(0)+" "+to_string(imposter[int(threshold*x)])+" "to_string(threshold)+" "+to_string("0")+" ";
+ sts+= to_string(failsub)+" "+to_string(tot)+" "+to_string(original[int(threshold*x)])+" "+to_string(original[0])+" "+
+   to_string(imposter[int(threshold*x)])+" "+to_string(imposter[x-1]) +" ";
+ sts+= to_string(float(imposter[int(threshold*x)])/imposter[x-1]) + " " + to_string(float(original[int(threshold*x)])/original[0]) ; 
+ system(&sts[0]) ; 
 }
 
