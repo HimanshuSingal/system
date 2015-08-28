@@ -8,7 +8,7 @@
 using namespace std;
 int main()
 {
-  ios::sync_with_stdio(false) ; 
+  //  ios::sync_with_stdio(false) ; 
   int original[x]={0};
   int imposter[x]={0};
   ifstream infile;
@@ -24,13 +24,14 @@ int main()
   int mxs  =1;
   int mxid =1;
   int mxgi = 1;
-  int mxd = 1;
+  float mxd = 1;
   int mns = 1;
   int mnid = 1;
-  int mnd = 1 ;
+  float mnd = 1 ;
 float data[6];
  char buffer[1000];
  float score;
+ cout << "started\n" ;  
  while(!infile.eof())
     {
       
@@ -53,7 +54,7 @@ float data[6];
 	{
 	  if( curs != int(data[0]) or curid != int(data[1]))
 	    {
-	      char buffer[1000];
+	     
 	      sprintf(buffer,"%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n",curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi);
 	      outfile<<buffer;
 	      curs = int(data[0]);
@@ -93,17 +94,10 @@ float data[6];
 	if(int(data[4])==1)
 	  {
 	    originalcunt+=1;
-	    if(score==intscore)
-	      {
 		if(score!= 0)
 		  original[intscore-1]+=1;
 		else
 		  original[intscore]+=1;
-
-	      }
-	    else
-	      original[intscore]+=1;
-
 	  }
 	else
 	  {
@@ -117,18 +111,12 @@ float data[6];
       //         Imposter  i index corresponds to  all values in between [ 0, y*(i) ) 
       //	 Genuine i index corresponds to all values in between ( y*(i-1) , 1 ] 
       //	 y ==> pow( 10 , -6 )           
-      
-   
-
-
     }
-  
- 
   sprintf(buffer,"%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n",curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi);
   outfile<<buffer;
   outfile.close();
   infile.close();
-
+  cout << "crr done\n";
   ofstream hg ;
   hg.open("../files/hist_G.txt");
   ofstream hi;
@@ -136,9 +124,10 @@ float data[6];
   for(int i=0;i<x;i++)
     {
       hi<<i<<" "<<imposter[i]*1.0/impostercunt<<"\n";
-      hi<<i<<" "<<original[i]*1.0/originalcunt<<"\n";
+      hg<<i<<" "<<original[i]*1.0/originalcunt<<"\n";
          
     }
+  cout << "hist done\n";
   hg.close();
   hi.close();
   for(int i=1;i<x;i++)
@@ -153,9 +142,8 @@ float data[6];
   int index ;
   for(int i=0;i<x;i++){
     if (imposter[i] != 0 && original[i] != 0 ){
-      
-      if (abs( ( float(imposter[i])/imposter[x-1] -(float(original[i]))/original[0])) < minvalue ){ 
-	minvalue = abs( (float(imposter[i])/imposter[x-1] ) - (float(original[i])/original[0])); 
+      if (abs( float( float(imposter[i]) / (float( imposter[x-1])) ) - float( float(original[i]) / (float( original[0])) ) ) < minvalue ){ 
+	minvalue = abs((imposter[i]*(1.000000))/(imposter[x-1]*1.000000) -   (1.000000*original[i])/(1.000000*original[0])); 
 	threshold = float((float)i*(float(pow(10,-6))));
 	  index = i ;
       }
@@ -206,18 +194,20 @@ ofstream farfile;
 ofstream frrfile;
 farfile.open("../files/FAR.dat");
 frrfile.open("../files/FRR.dat");
+ cout <<"doing farfarr\n";
 while(!infile.eof()){ 
   infile >> data[0] >> data[1] >> data[2] >> data[3] >> data[4] >> data[5] ;  
   score = data[5];
-  if (data[4] == 1){
+  if (int(data[4]) == 1){
     if (score > threshold)
-      farfile << data[0] << data[1] << data[2] << data[3] << data[4] << data[5]<<"\n";
+      farfile << data[0]<<"\t" << data[1]<<"\t" << data[2]<<"\t" << data[3]<<"\t" << data[4]<<"\t" << data[5]<<"\n";
   }
   else {
     if (score <= threshold)
-      frrfile << data[0] << data[1] << data[2] << data[3] << data[4] << data[5]<<"\n";
+      frrfile << data[0]<<"\t" << data[1]<<"\t" << data[2]<<"\t" << data[3]<<"\t"<< data[4]<<"\t" << data[5]<<"\n";
   } 
  }
+ cout << "done\n";
 frrfile.close() ;
 farfile.close();
  cout << threshold <<endl;
@@ -230,6 +220,6 @@ farfile.close();
  ofstream fout ;
 fout.open("../files/far_vs_frr.txt");
 for(int i=0;i<x;i++)
-  fout  << float((imposter[i])/imposter[x-1]) << " " << float((original[i])/original[0])<< endl;
+  fout  << float(imposter[i])/imposter[x-1] << " " << float(original[i])/original[0]<< endl;
 }
 
