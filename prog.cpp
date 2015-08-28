@@ -241,8 +241,22 @@ farfile.close();
  // original -- frr
  // imposter -- far
  ofstream fout ;
+ ofstream fileout ;
+
 fout.open("../files/far_vs_frr.txt");
+fileout.open("../files/far_vs_frr_data.txt");
+
+//frr original
 for(int i=0;i<x;i++)
+  {
   fout  << float(float(imposter[i])/imposter[x-1]) << " " << float(float(original[i])/original[0])<< endl;
+ 
+  fileout<<i<<"\t"<<original[0]-original[i]<<"\t"<<float(float(original[i])/original[0])<<"\t"<<i<<"\t"<<imposter[i]<<"\t"<<float(float(imposter[i])/imposter[x-1])<<endl;
+
+  
+}
+ fout.close();
+ fileout.close();
+
 }
 
