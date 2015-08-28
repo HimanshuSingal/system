@@ -13,6 +13,10 @@ int main()
   int imposter[x]={0};
   ifstream infile;
   ofstream outfile;
+  int idp = 0 ;
+  int gdp = 0 ;
+  int tot = 0 ;
+  int crr = 0  ;
   int impostercunt=0;
   int originalcunt=0;
   infile.open("../L4.txt");
@@ -55,7 +59,8 @@ float data[6];
 	{
 	  if( curs != int(data[0]) or curid != int(data[1]))
 	    {
-	     
+	      if(int(mxgi) == 1)crr++ ;
+	      tot++;
 	      sprintf(buffer,"%d\t%d\t[(%d,%d)%.6f]\t[(%d,%d)%.6f]\t%.6f\t%d\n",curs,curid,mxs,mxid,mxd,mns,mnid,mnd,mxd/mnd,mxgi);
 	      outfile<<buffer;
 	      curs = int(data[0]);
@@ -127,8 +132,11 @@ float data[6];
   hg.open("../files/hist_G.txt");
   ofstream hi;
   hi.open("../files/hist_I.txt");
+  
   for(int i=0;i<x;i++)
     {
+      if(imposter[i]!=0)idp++;
+      if(original[i]!=0)gdp++;
       hi<<i<<" "<<(imposter[i]*1.0)/impostercunt<<"\n";
       hg<<i<<" "<<(original[i]*1.0)/originalcunt<<"\n";
          
@@ -148,7 +156,7 @@ float data[6];
   int index ;
   for(int i=0;i<x;i++){
     if (imposter[i] != 0 && original[i] != 0 ){
-      if (abs( float( float(imposter[i]) / (float( imposter[x-1])) ) - float( float(original[i]) / (float( original[0])) ) ) < minvalue ){ 
+      if (fabs( float( float(imposter[i]) / (float( imposter[x-1])) ) - float( float(original[i]) / (float( original[0])) ) ) < minvalue ){ 
 	minvalue = fabs((imposter[i]*(1.000000))/(imposter[x-1]*1.000000) -   (1.000000*original[i])/(1.000000*original[0])); 
 	threshold = float((float)i*(float(pow(10,-6))));
 	  index = i ;
@@ -198,8 +206,13 @@ float data[6];
 infile.open("../L4.txt");  
 ofstream farfile;
  ofstream frrfile;cout << threshold << endl;
-farfile.open("../files/FAR.dat");
-frrfile.open("../files/FRR.dat");
+farfile.open("../files/FRR.dat");
+ farfile << "Genuine Failed (FRR)\n";
+
+  frrfile << "Imposter Failed (FAR)\n";
+ 
+frrfile.open("../files/FAR.dat");
+ cout << (float(crr)/tot)*100 << endl;
  cout <<"doing farfarr\n";
 while(!infile.eof()){ 
   infile >> data[0] >> data[1] >> data[2] >> data[3] >> data[4] >> data[5] ;  
@@ -213,16 +226,20 @@ while(!infile.eof()){
       frrfile << data[0]<<"\t" << data[1]<<"\t" << data[2]<<"\t" << data[3]<<"\t"<< data[4]<<"\t" << data[5]<<"\n";
   } 
  }
+ farfile << "FRR Cases Done\n" ;
+ frrfile << "FAR Cases Done\n" ;
  cout << "done\n";
 frrfile.close() ;
 farfile.close();
+
  cout << threshold <<endl;
  float imp = float((float)imposter[index]/(float)original[0]); 
  float orig= float((float)original[index]/(float)imposter[x-1]);
- cout << imp<<endl<<orig<<endl<< abs(imp-orig) <<endl;
+ cout << imp<<endl<<orig<<endl<< fabs(imp-orig) <<endl;
 
 
- 
+ // original -- frr
+ // imposter -- far
  ofstream fout ;
 fout.open("../files/far_vs_frr.txt");
 for(int i=0;i<x;i++)
