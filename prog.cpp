@@ -29,6 +29,7 @@ int main()
   int mnid = 1;
   float mnd = 1 ;
 float data[6];
+ 
  char buffer[1000];
  float score;
  cout << "started\n" ;  
@@ -102,11 +103,16 @@ float data[6];
 	else
 	  {
 	    impostercunt+=1;
-	    if(intscore==x)
+	    if(intscore==x){
 	      imposter[intscore-1]+=1;
-	    else 
+	      // printf("%d\t%d\n",intscore-1,imposter[intscore-1]);
+	    }
+	    else {
 	      imposter[intscore]+=1;
+	      // printf("%d \t %d \n",intscore,imposter[intscore]);
+	    }
 	  }
+	
       //	Updated 
       //         Imposter  i index corresponds to  all values in between [ 0, y*(i) ) 
       //	 Genuine i index corresponds to all values in between ( y*(i-1) , 1 ] 
@@ -123,8 +129,8 @@ float data[6];
   hi.open("../files/hist_I.txt");
   for(int i=0;i<x;i++)
     {
-      hi<<i<<" "<<imposter[i]*1.0/impostercunt<<"\n";
-      hi<<i<<" "<<original[i]*1.0/originalcunt<<"\n";
+      hi<<i<<" "<<(imposter[i]*1.0)/impostercunt<<"\n";
+      hg<<i<<" "<<(original[i]*1.0)/originalcunt<<"\n";
          
     }
   cout << "hist done\n";
@@ -137,13 +143,13 @@ float data[6];
 
 
   
-  long long  minvalue  = 1000000000000 ;
+  float  minvalue  = 1000000.00 ;
   float threshold = 0 ;
   int index ;
   for(int i=0;i<x;i++){
     if (imposter[i] != 0 && original[i] != 0 ){
       if (abs( float( float(imposter[i]) / (float( imposter[x-1])) ) - float( float(original[i]) / (float( original[0])) ) ) < minvalue ){ 
-	minvalue = abs((imposter[i]*(1.000000))/(imposter[x-1]*1.000000) -   (1.000000*original[i])/(1.000000*original[0])); 
+	minvalue = fabs((imposter[i]*(1.000000))/(imposter[x-1]*1.000000) -   (1.000000*original[i])/(1.000000*original[0])); 
 	threshold = float((float)i*(float(pow(10,-6))));
 	  index = i ;
       }
@@ -191,7 +197,7 @@ float data[6];
   
 infile.open("../L4.txt");  
 ofstream farfile;
-ofstream frrfile;
+ ofstream frrfile;cout << threshold << endl;
 farfile.open("../files/FAR.dat");
 frrfile.open("../files/FRR.dat");
  cout <<"doing farfarr\n";
@@ -220,6 +226,6 @@ farfile.close();
  ofstream fout ;
 fout.open("../files/far_vs_frr.txt");
 for(int i=0;i<x;i++)
-  fout  << float((imposter[i])/imposter[x-1]) << " " << float((original[i])/original[0])<< endl;
+  fout  << float(float(imposter[i])/imposter[x-1]) << " " << float(float(original[i])/original[0])<< endl;
 }
 
